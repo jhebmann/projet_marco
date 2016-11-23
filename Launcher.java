@@ -4,18 +4,54 @@ import java.util.*;
 
 public class Launcher {
 	public static void main(String[] args) {
+		
+		
 		long startTime = System.currentTimeMillis(); //pour voir le temps que dure l'algo
 		int nbG = 18; //le nombre de groupes
-		int nbP = 25; //le nombre de projets
+		int nbP = 35; //le nombre de projets
+		
 		Resultats res = new Resultats(nbP*2, nbG, nbP); //On génère le tableau
 		//System.out.println("\n" + res);
 		HashMap<String, Integer>[] sortie = res.bestSolution(); //On recupere la meilleure solution
+		/*
+		for(int i = 0 ; i < 98 ; i++){
+			res = new Resultats(nbP*2, nbG, nbP);
+			sortie = res.bestSolution();
+			System.out.println(i);
+		}
+		*/
+		/*
 		
-//		for(int i = 0 ; i < 99 ; i++){
-//			res = new Resultats(nbP*2, nbG, nbP);
-//			sortie = res.bestSolution();
-//			System.out.println(i);
-//		}
+		long startTime = System.currentTimeMillis();
+		float[][] tab = new float[5][5];
+		tab[0][0] = 4;
+		tab[0][1] = 5;
+		tab[0][2] = 0;
+		tab[0][3] = 1;
+		tab[0][4] = 2;
+		tab[1][0] = 3;
+		tab[1][1] = 2;
+		tab[1][2] = 5;
+		tab[1][3] = 2;
+		tab[1][4] = 1;
+		tab[2][0] = 2;
+		tab[2][1] = 1;
+		tab[2][2] = 0;
+		tab[2][3] = 5;
+		tab[2][4] = 1;
+		tab[3][0] = 1;
+		tab[3][1] = 1;
+		tab[3][2] = 1;
+		tab[3][3] = 1;
+		tab[3][4] = 5;
+		tab[4][0] = 0;
+		tab[4][1] = 1;
+		tab[4][2] = 4;
+		tab[4][3] = 1;
+		tab[4][4] = 1;
+		Resultats res = new Resultats(tab); //On génère le tableau
+		HashMap<String, Integer>[] sortie = res.bestSolution(); //On recupere la meilleure solution
+		*/
 		
 		/*
 		int compteur = 0;
