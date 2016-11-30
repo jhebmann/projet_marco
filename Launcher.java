@@ -8,87 +8,24 @@ public class Launcher {
 		
 		long startTime = System.currentTimeMillis(); //pour voir le temps que dure l'algo
 		int nbG = 18; //le nombre de groupes
-		int nbP = 35; //le nombre de projets
+		int nbP = 25; //le nombre de projets
 		
 		Resultats res = new Resultats(nbP*2, nbG, nbP); //On génère le tableau
-		//System.out.println("\n" + res);
-		HashMap<String, Integer>[] sortie = res.bestSolution(); //On recupere la meilleure solution
-		/*
-		for(int i = 0 ; i < 98 ; i++){
-			res = new Resultats(nbP*2, nbG, nbP);
-			sortie = res.bestSolution();
-			System.out.println(i);
-		}
-		*/
-		/*
+		//Pour utiliser des données non générées aléatoirement, il faut créer un tableau d'entiers et appeler le constructeur Resultats(tableau)
+		List<HashMap<String, Integer>> sortie = res.bestSolution(); //On recupere les meilleures solutions
 		
-		long startTime = System.currentTimeMillis();
-		float[][] tab = new float[5][5];
-		tab[0][0] = 4;
-		tab[0][1] = 5;
-		tab[0][2] = 0;
-		tab[0][3] = 1;
-		tab[0][4] = 2;
-		tab[1][0] = 3;
-		tab[1][1] = 2;
-		tab[1][2] = 5;
-		tab[1][3] = 2;
-		tab[1][4] = 1;
-		tab[2][0] = 2;
-		tab[2][1] = 1;
-		tab[2][2] = 0;
-		tab[2][3] = 5;
-		tab[2][4] = 1;
-		tab[3][0] = 1;
-		tab[3][1] = 1;
-		tab[3][2] = 1;
-		tab[3][3] = 1;
-		tab[3][4] = 5;
-		tab[4][0] = 0;
-		tab[4][1] = 1;
-		tab[4][2] = 4;
-		tab[4][3] = 1;
-		tab[4][4] = 1;
-		Resultats res = new Resultats(tab); //On génère le tableau
-		HashMap<String, Integer>[] sortie = res.bestSolution(); //On recupere la meilleure solution
-		*/
 		
-		/*
-		int compteur = 0;
-		int moyenne = 0;
-		// System.out.println(res.permutations);
-		for (int i = 0; i < 10; i++) {
-			compteur = 0;
-			System.out.println(i);
-			res = new Resultats(10, nbG, nbP);
-			sortie = res.bestSolution();
-			while (sortie[0] == sortie[1] || sortie[0] == sortie[2] || sortie[2] == sortie[1]) {
-				compteur++;
-				res = new Resultats(10, nbG, nbP);
-				sortie = res.bestSolution();
-				//System.out.println("\n\n");
+		//On affiche les resultats avec la plus basse somme des erreurs
+		System.out.print("Il y a " + sortie.size() + " répartitions possibles :");
+		
+		for(int j = 0 ; j < sortie.size() ; j++){
+			System.out.println();
+			for (String i : sortie.get(j).keySet()) {
+				System.out.print(i + " : " + sortie.get(j).get(i) + "\t");
 			}
-			moyenne+=compteur;
 		}
-		moyenne/=10;
-		*/
 		
-		//On affiche le resultat avec la plus basse somme des erreurs
-		for (String i : sortie[0].keySet()) {
-			System.out.print(i + " : " + sortie[0].get(i) + "\t");
-		}
-		System.out.println();
-		//On affiche le resultat avec la plus basse somme des erreurs au carré
-		for (String i : sortie[1].keySet()) {
-			System.out.print(i + " : " + sortie[1].get(i) + "\t");
-		}
-		System.out.println();
-		//On affiche le resultat avec la plus basse somme des erreurs au cube
-		for (String i : sortie[2].keySet()) {
-			System.out.print(i + " : " + sortie[2].get(i) + "\t");
-		}
 		System.out.println("\n" + res);
-		//System.out.println("Au bout d'une moyenne de " + moyenne + " essais");
 		
 		//On affiche le temps qu'a pris l'algo
 		long stopTime = System.currentTimeMillis();
