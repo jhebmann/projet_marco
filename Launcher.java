@@ -10,7 +10,7 @@ public class Launcher {
 		int nbG = 18; //le nombre de groupes
 		int nbP = 25; //le nombre de projets
 		
-		Resultats res = new Resultats(nbP*2, nbG, nbP); //On génère le tableau
+		Resultats res = new Resultats(100, nbG, nbP); //On génère le tableau
 		//Pour utiliser des données non générées aléatoirement, il faut créer un tableau d'entiers et appeler le constructeur Resultats(tableau)
 		List<HashMap<String, Integer>> sortie = res.bestSolution(); //On recupere les meilleures solutions
 		
@@ -31,5 +31,11 @@ public class Launcher {
 		long stopTime = System.currentTimeMillis();
 	    long elapsedTime = stopTime - startTime;
 	    System.out.println("temps : " + elapsedTime + " millisecondes");
+	    
+	    HashMap<String, Integer> sortie2 = res.improve();
+	    System.out.println();
+		for (String i : sortie2.keySet()) {
+			System.out.print(i + " : " + sortie2.get(i) + "\t");
+		}
 	}
 }

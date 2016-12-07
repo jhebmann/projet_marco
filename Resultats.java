@@ -7,13 +7,12 @@ public class Resultats {
 	private int groupes = 5; // le nombre de groupes
 	private int projets = 7; // le nombre de projets
 	private float[][] tableau; // le tableau des resultats
-	String permutations = ""; // les permutataions possibles
+	String permutations = ""; // les permutations possibles
 	private float[] maxGrp; // le tableau des points max par groupe
 	private float[] maxProj; // le tableau des points max par projet
 	private long start = 0;
 
-	
-	private void initialize(){
+	private void initialize() {
 		String temp = "";
 		float rand;
 		float maxG;
@@ -43,7 +42,7 @@ public class Resultats {
 		for (int i = 0; i < this.groupes; i++) {
 			for (int j = 0; j < projets; j++) {
 				tableau[j][i] /= maxGrp[i];
-				
+
 				if (tableau[j][i] != 1 && tableau[j][i] != 0) {
 					rand = (float) (Math.random() / 100 - 0.005);
 					if (rand < 0)
@@ -74,12 +73,13 @@ public class Resultats {
 		// On va chercher à créer toutes les permutations possibles sur la
 		// chaine de caractères (= toutes les répartitions possibles)
 		while (this.permutations.length() == 0) {
-			//System.out.println("On regarde a max - " + i + " avec un décalage max sur le max du projet de " + j);
-			
-			
-			//On initialise le temps, si on ne trouve pas de valeur dans le temps imparti on recommence
+			// System.out.println("On regarde a max - " + i + " avec un décalage
+			// max sur le max du projet de " + j);
+
+			// On initialise le temps, si on ne trouve pas de valeur dans le
+			// temps imparti on recommence
 			this.start = System.currentTimeMillis();
-			
+
 			this.permutation(temp, i, j);
 			// Si on ne trouve pas de permutation avec que les max, on diminue
 			// un peu les valeurs et on recommence
@@ -90,7 +90,6 @@ public class Resultats {
 			j += 1;
 		}
 	}
-	
 
 	public Resultats() {
 		this.tableau = new float[this.projets][this.groupes]; // On crée le
@@ -196,7 +195,10 @@ public class Resultats {
 	 *            la precision sur les max des projets
 	 */
 	public void permutation(String prefix, String str, float a, float b) {
-		if (System.currentTimeMillis()-this.start > 100) //Si le calcul des permutations prend trop de temps, on arrete.
+		if (System.currentTimeMillis() - this.start > 100) // Si le calcul des
+															// permutations
+															// prend trop de
+															// temps, on arrete.
 			return;
 		int n = str.length();
 		if (n == this.projets - this.groupes) {
@@ -305,5 +307,49 @@ public class Resultats {
 		System.out.println("erreur : " + erreurMax);
 		return tempList; // On renvoie les maps correspondant aux plus petites
 							// sommes d'erreurs
+	}
+
+	public HashMap<String, Integer> improve() {
+		HashMap<String, Integer> firstSol = new HashMap<String, Integer>();
+		firstSol = this.bestSolution().get(0);
+		float erreur = 0;
+
+		HashMap<String, Integer> tempMap = firstSol, initialMap = (HashMap<String, Integer>) firstSol.clone();
+		int temp;
+
+		for (String i : initialMap.keySet()) {
+			for (String j : initialMap.keySet()) {
+				if (i != j && i.charAt(0) <= (char)(this.groupes-1+65)) {
+					if (j.charAt(0) <= (char)(this.groupes-1+65)) {
+						if ((this.tableau[tempMap.get(j) - 1][((int) i.charAt(0)) - 65]
+								- this.tableau[tempMap.get(i) - 1][((int) i.charAt(0))
+										- 65]) > (this.tableau[tempMap.get(j) - 1][((int) j.charAt(0)) - 65]
+												- this.tableau[tempMap.get(i) - 1][((int) j.charAt(0)) - 65])) {
+							temp = tempMap.get(i);
+							tempMap.remove(i);
+							tempMap.put(i, tempMap.get(j));
+							tempMap.remove(j);
+							tempMap.put(j, temp);
+						}
+					} else {
+						if (this.tableau[tempMap.get(i) - 1][((int) i.charAt(0))
+								- 65] < this.tableau[tempMap.get(j) - 1][((int) i.charAt(0)) - 65]) {
+							temp = tempMap.get(i);
+							tempMap.remove(i);
+							tempMap.put(i, tempMap.get(j));
+							tempMap.remove(j);
+							tempMap.put(j, temp);
+						}
+					}
+				}
+			}
+		}
+
+		for (int j = 0; j < this.groupes; j++) { // On calcule la somme
+			// des erreurs
+			erreur += (this.maxGrp[j] - Math.round(tableau[tempMap.get("" + (char) (j + 65)) - 1][j] * this.maxGrp[j]));
+		}
+		System.out.println("erreur : " + erreur);
+		return tempMap;
 	}
 }
