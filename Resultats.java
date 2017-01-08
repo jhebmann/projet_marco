@@ -11,8 +11,10 @@ public class Resultats {
 	private float[] maxGrp; // le tableau des points max par groupe
 	private float[] maxProj; // le tableau des points max par projet
 	private long start = 0;
+	private boolean stop_if_too_long = false;
 
-	private void initialize() {
+	private void initialize(boolean stop_if_too_long) {
+		this.stop_if_too_long = stop_if_too_long;
 		String temp = "";
 		float rand;
 		float maxG;
@@ -91,7 +93,7 @@ public class Resultats {
 		}
 	}
 
-	public Resultats() {
+	public Resultats(boolean stop_if_too_long) {
 		this.tableau = new float[this.projets][this.groupes]; // On crée le
 																// tableau
 		for (int i = 0; i < this.groupes; i++) {
@@ -103,7 +105,7 @@ public class Resultats {
 				// aléatoire
 			}
 		}
-		this.initialize();
+		this.initialize(stop_if_too_long);
 	}
 
 	/**
@@ -116,9 +118,9 @@ public class Resultats {
 	 * @param pro
 	 *            le nombre de projets
 	 */
-	public Resultats(int p, int g, int pro) {
+	public Resultats(int p, int g, int pro, boolean stop_if_too_long) {
 		// Si on a moins de projets que de groupes, ça ne va pas : on définit le
-		// nombre de projet égal au nombre de groupes
+		// nombre de projets égal au nombre de groupes
 		if (pro >= g)
 			this.projets = pro;
 		else
@@ -136,17 +138,17 @@ public class Resultats {
 				// aléatoires
 			}
 		}
-		this.initialize();
+		this.initialize(stop_if_too_long);
 	}
 
-	public Resultats(float[][] tab) {
+	public Resultats(float[][] tab, boolean stop_if_too_long) {
 		this.projets = tab.length;
 		this.groupes = tab[0].length;
 		this.points = 0;
 		for (int i = 0; i < tab[0].length; i++)
 			this.points += tab[0][i];
 		this.tableau = tab;
-		this.initialize();
+		this.initialize(stop_if_too_long);
 	}
 
 	/**
@@ -195,11 +197,12 @@ public class Resultats {
 	 *            la precision sur les max des projets
 	 */
 	public void permutation(String prefix, String str, float a, float b) {
-		if (System.currentTimeMillis() - this.start > 100) // Si le calcul des
+		if (this.stop_if_too_long && System.currentTimeMillis() - this.start > 100){ // Si le calcul des
 															// permutations
 															// prend trop de
 															// temps, on arrete.
 			return;
+		}
 		int n = str.length();
 		if (n == this.projets - this.groupes) {
 			this.permutations += prefix + ", ";

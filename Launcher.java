@@ -10,7 +10,7 @@ public class Launcher {
 		int nbG = 18; //le nombre de groupes
 		int nbP = 25; //le nombre de projets
 		
-		Resultats res = new Resultats(100, nbG, nbP); //On génère le tableau
+		Resultats res = new Resultats(100, nbG, nbP, true); //On génère le tableau
 		//Pour utiliser des données non générées aléatoirement, il faut créer un tableau d'entiers et appeler le constructeur Resultats(tableau)
 		List<HashMap<String, Integer>> sortie = res.bestSolution(); //On recupere les meilleures solutions
 		
