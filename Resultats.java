@@ -197,10 +197,13 @@ public class Resultats {
 	 *            la precision sur les max des projets
 	 */
 	public void permutation(String prefix, String str, float a, float b) {
-		if (this.stop_if_too_long && System.currentTimeMillis() - this.start > 100){ // Si le calcul des
-															// permutations
-															// prend trop de
-															// temps, on arrete.
+		if (this.stop_if_too_long && System.currentTimeMillis() - this.start > 100) { // Si
+																						// le
+																						// calcul
+																						// des
+			// permutations
+			// prend trop de
+			// temps, on arrete.
 			return;
 		}
 		int n = str.length();
@@ -228,6 +231,7 @@ public class Resultats {
 		// On transforme la chaine de caracteres contenant les permutations en
 		// tableau
 		List<String> items = Arrays.asList(this.permutations.split("\\s*,\\s*"));
+
 		for (int i = 0; i < items.size(); i++) { // On regarde chaque
 													// permutation
 			if (items.get(i).length() == this.groupes) { // Si on trouve une
@@ -300,30 +304,32 @@ public class Resultats {
 					erreur += (this.maxGrp[j]
 							- Math.round(tableau[tempMap.get("" + (char) (j + 65)) - 1][j] * this.maxGrp[j]));
 				}
-				if (erreur == erreurMax) {
+				if (erreur == erreurMax || this.stop_if_too_long) {
 					tempList.add(tempMap);
 				}
 			}
 		}
 
-		// On affiche les erreurs
-		System.out.println("erreur : " + erreurMax);
+		/*
+		 * // On affiche les erreurs System.out.println("erreur : " +
+		 * erreurMax);
+		 */
+
 		return tempList; // On renvoie les maps correspondant aux plus petites
 							// sommes d'erreurs
 	}
 
-	public HashMap<String, Integer> improve() {
-		HashMap<String, Integer> firstSol = new HashMap<String, Integer>();
-		firstSol = this.bestSolution().get(0);
+	private HashMap<String, Integer> improveOne(HashMap<String, Integer> sol) {
+
 		float erreur = 0;
 
-		HashMap<String, Integer> tempMap = firstSol, initialMap = (HashMap<String, Integer>) firstSol.clone();
+		HashMap<String, Integer> tempMap = sol, initialMap = (HashMap<String, Integer>) sol.clone();
 		int temp;
 
 		for (String i : initialMap.keySet()) {
 			for (String j : initialMap.keySet()) {
-				if (i != j && i.charAt(0) <= (char)(this.groupes-1+65)) {
-					if (j.charAt(0) <= (char)(this.groupes-1+65)) {
+				if (i != j && i.charAt(0) <= (char) (this.groupes - 1 + 65)) {
+					if (j.charAt(0) <= (char) (this.groupes - 1 + 65)) {
 						if ((this.tableau[tempMap.get(j) - 1][((int) i.charAt(0)) - 65]
 								- this.tableau[tempMap.get(i) - 1][((int) i.charAt(0))
 										- 65]) > (this.tableau[tempMap.get(j) - 1][((int) j.charAt(0)) - 65]
@@ -348,11 +354,37 @@ public class Resultats {
 			}
 		}
 
-		for (int j = 0; j < this.groupes; j++) { // On calcule la somme
-			// des erreurs
-			erreur += (this.maxGrp[j] - Math.round(tableau[tempMap.get("" + (char) (j + 65)) - 1][j] * this.maxGrp[j]));
-		}
-		System.out.println("erreur : " + erreur);
 		return tempMap;
+	}
+
+	public HashMap<String, Integer> improve() {
+		HashMap<String, Integer> firstSol = new HashMap<String, Integer>();
+		List<HashMap<String, Integer>> allSolutions = this.bestSolution();
+		firstSol = allSolutions.get(0);
+		float erreur = 0;
+
+		HashMap<String, Integer> tempMap = firstSol, result = null;
+		int temp;
+		float errMax = 999999;
+		
+		for (int k = 0; k < allSolutions.size(); k++) {
+			erreur = 0;
+			tempMap = allSolutions.get(k);
+
+			tempMap = improveOne(tempMap);
+
+			for (int j = 0; j < this.groupes; j++) { // On calcule la somme
+				// des erreurs
+				erreur += (this.maxGrp[j]
+						- Math.round(tableau[tempMap.get("" + (char) (j + 65)) - 1][j] * this.maxGrp[j]));
+			}
+			if (erreur < errMax) {
+				errMax = erreur;
+				result = tempMap;
+			}
+		}
+		
+		System.out.println("erreur : " + errMax);
+		return result;
 	}
 }

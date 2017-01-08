@@ -7,22 +7,23 @@ public class Launcher {
 		
 		
 		long startTime = System.currentTimeMillis(); //pour voir le temps que dure l'algo
-		int nbG = 18; //le nombre de groupes
-		int nbP = 25; //le nombre de projets
+		int nbG = 20; //le nombre de groupes
+		int nbP = 40; //le nombre de projets
+		int nEssais = 1000; // le nombre d'essais a effectuer
+		boolean stopIfLong = true;
 		
-		Resultats res = new Resultats(100, nbG, nbP, true); //On génère le tableau
+		Resultats res = new Resultats(100, nbG, nbP, stopIfLong); //On génère le tableau
 		//Pour utiliser des données non générées aléatoirement, il faut créer un tableau d'entiers et appeler le constructeur Resultats(tableau)
 		List<HashMap<String, Integer>> sortie = res.bestSolution(); //On recupere les meilleures solutions
+		HashMap<String, Integer> repartition = res.improve();
 		
 		
-		//On affiche les resultats avec la plus basse somme des erreurs
-		System.out.print("Il y a " + sortie.size() + " répartitions possibles :");
 		
-		for(int j = 0 ; j < sortie.size() ; j++){
-			System.out.println();
-			for (String i : sortie.get(j).keySet()) {
-				System.out.print(i + " : " + sortie.get(j).get(i) + "\t");
-			}
+		for(int i = 0 ; i < nEssais-1 ; i++){
+			System.out.println("Numero " + (i+2) + " : ");
+			res = new Resultats(100, nbG, nbP, stopIfLong);
+			sortie = res.bestSolution();
+			repartition = res.improve();
 		}
 		
 		System.out.println("\n" + res);
@@ -30,12 +31,11 @@ public class Launcher {
 		//On affiche le temps qu'a pris l'algo
 		long stopTime = System.currentTimeMillis();
 	    long elapsedTime = stopTime - startTime;
-	    System.out.println("temps : " + elapsedTime + " millisecondes");
+	    System.out.println("temps moyen : " + (elapsedTime/nEssais) + " millisecondes");
 	    
-	    HashMap<String, Integer> sortie2 = res.improve();
 	    System.out.println();
-		for (String i : sortie2.keySet()) {
-			System.out.print(i + " : " + sortie2.get(i) + "\t");
+		for (String i : repartition.keySet()) {
+			System.out.print(i + " : " + repartition.get(i) + "\t");
 		}
 	}
 }
